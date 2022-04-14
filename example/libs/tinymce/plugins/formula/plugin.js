@@ -11,6 +11,22 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 6784:
+/***/ ((module) => {
+
+const env = {
+    development: {
+        APP_PUBLIC_PATH: 'http://localhost:8900',
+    },
+    production: {
+        APP_PUBLIC_PATH: 'https://mengxianghan.github.io/xy-editor/example',
+    },
+}
+
+module.exports = env["production"]
+
+/***/ }),
+
 /***/ 8552:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -4619,6 +4635,8 @@ function renderHTML({editor, data}) {
 
 
 
+const env = __webpack_require__(6784)
+
 class Dialog {
     constructor({editor}) {
         this.editor = editor
@@ -4643,7 +4661,7 @@ class Dialog {
                   url:
                        false
                           ? 0
-                          : `${baseURL}/pages/formula.html`,
+                          : `${env.APP_PUBLIC_PATH}/pages/formula.html`,
                   width: 1000,
                   height: 648,
                   buttons: [
