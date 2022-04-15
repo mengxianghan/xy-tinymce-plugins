@@ -41,20 +41,20 @@ __webpack_require__.r(__webpack_exports__);
 ;// CONCATENATED MODULE: ./src/plugins/underlineplus/button.js
 
 
-function registerButton({editor}) {
+function registerButton({ editor }) {
     function onSetup(api) {
         editor.formatter.register(config.name, {
             inline: 'span',
-            styles: {textDecoration: 'underline 1px'},
-        })
+            styles: { textDecoration: 'underline 1px' },
+        });
 
         editor.formatter.formatChanged(config.name, function (state) {
-            api.setActive(state)
-        })
+            api.setActive(state);
+        });
     }
 
     function onAction() {
-        editor.execCommand('mceToggleFormat', false, config.name)
+        editor.execCommand('mceToggleFormat', false, config.name);
     }
 
     editor.ui.registry.addToggleButton(config.name, {
@@ -63,14 +63,14 @@ function registerButton({editor}) {
         tooltip: config.tooltip,
         onAction,
         onSetup,
-    })
+    });
 
     editor.ui.registry.addToggleMenuItem(config.name, {
         text: config.text,
         icon: config.icon,
         onAction,
         onSetup,
-    })
+    });
 }
 
 ;// CONCATENATED MODULE: ./src/plugins/underlineplus/index.js
@@ -79,14 +79,14 @@ function registerButton({editor}) {
 
 
 tinymce.PluginManager.add(config.name, function (editor) {
-    registerButton({editor})
+    registerButton({ editor });
 
     return {
         getMetaData: () => ({
             name: config.name,
         }),
-    }
-})
+    };
+});
 
 /******/ 	return __webpack_exports__;
 /******/ })()

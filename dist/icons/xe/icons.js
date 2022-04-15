@@ -11,4 +11,4 @@ tinymce.IconManager.add('xe', {
         blanknumber: '',
         blankbracket: '',
     },
-})
+});

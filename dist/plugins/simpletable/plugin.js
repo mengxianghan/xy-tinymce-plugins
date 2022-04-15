@@ -41,7 +41,7 @@ __webpack_require__.r(__webpack_exports__);
 ;// CONCATENATED MODULE: ./src/plugins/simpletable/button.js
 
 
-function registerButton({editor}) {
+function registerButton({ editor }) {
     editor.ui.registry.addMenuButton(config.name, {
         text: config.text,
         tooltip: config.tooltip,
@@ -50,17 +50,17 @@ function registerButton({editor}) {
                 {
                     type: 'fancymenuitem',
                     fancytype: 'inserttable',
-                    onAction: function ({numColumns, numRows}) {
+                    onAction: function ({ numColumns, numRows }) {
                         editor.execCommand('mceInsertTable', false, {
                             rows: numRows,
                             columns: numColumns,
-                        })
+                        });
                     },
                 },
-            ]
-            callback(items)
+            ];
+            callback(items);
         },
-    })
+    });
 }
 
 ;// CONCATENATED MODULE: ./src/plugins/simpletable/index.js
@@ -69,14 +69,14 @@ function registerButton({editor}) {
 
 
 tinymce.PluginManager.add(config.name, function (editor) {
-    registerButton({editor})
+    registerButton({ editor });
 
     return {
         getMetaData: () => ({
             name: config.name,
         }),
-    }
-})
+    };
+});
 
 /******/ 	return __webpack_exports__;
 /******/ })()

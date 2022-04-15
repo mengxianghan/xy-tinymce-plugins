@@ -44,26 +44,26 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * 渲染容器
  */
-function renderBox({editor}) {
+function renderBox({ editor }) {
     const elLine = editor.dom.create(
         'span',
         {
             class: `xe-${config.name}`,
             'data-name': config?.name,
         },
-        '(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)',
-    )
-    return elLine
+        '(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)'
+    );
+    return elLine;
 }
 
 /**
  * 渲染 HTML
  * @returns
  */
-function renderHTML({editor}) {
-    const elBox = renderBox({editor})
+function renderHTML({ editor }) {
+    const elBox = renderBox({ editor });
 
-    return `&nbsp;${editor.dom.getOuterHTML(elBox)}&nbsp;`
+    return `&nbsp;${editor.dom.getOuterHTML(elBox)}&nbsp;`;
 }
 
 ;// CONCATENATED MODULE: ./src/plugins/blankbracket/button.js
@@ -71,12 +71,11 @@ function renderHTML({editor}) {
 
 
 
-function registerButton({editor}) {
-    function onSetup(api) {
-    }
+function registerButton({ editor }) {
+    function onSetup(api) {}
 
     function onAction() {
-        editor.execCommand('mceInsertContent', false, renderHTML({editor}))
+        editor.execCommand('mceInsertContent', false, renderHTML({ editor }));
     }
 
     editor.ui.registry.addToggleButton(config.name, {
@@ -85,14 +84,14 @@ function registerButton({editor}) {
         tooltip: config.tooltip,
         onAction,
         onSetup,
-    })
+    });
 
     editor.ui.registry.addToggleMenuItem(config.name, {
         text: config.text,
         icon: config.icon,
         onAction,
         onSetup,
-    })
+    });
 }
 
 ;// CONCATENATED MODULE: ./src/plugins/blankbracket/index.js
@@ -101,14 +100,14 @@ function registerButton({editor}) {
 
 
 tinymce.PluginManager.add(config.name, function (editor) {
-    registerButton({editor})
+    registerButton({ editor });
 
     return {
         getMetaData: () => ({
             name: config.name,
         }),
-    }
-})
+    };
+});
 
 /******/ 	return __webpack_exports__;
 /******/ })()

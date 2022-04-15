@@ -4498,66 +4498,66 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * 加载所需 js
  */
-function loadJs({editor}) {
-    const doc = editor.getDoc()
-    const elHead = doc.getElementsByTagName('head')[0]
-    const scriptList = Array.from(doc.getElementsByTagName('script'))
-    const jsList = getOption({editor, key: 'formula_js'})
+function loadJs({ editor }) {
+    const doc = editor.getDoc();
+    const elHead = doc.getElementsByTagName('head')[0];
+    const scriptList = Array.from(doc.getElementsByTagName('script'));
+    const jsList = getOption({ editor, key: 'formula_js' });
     if (jsList && jsList.length) {
         jsList.forEach((script) => {
             const flag = scriptList.every((o) => {
-                const src = o.getAttribute('src')
-                return src === script
-            })
+                const src = o.getAttribute('src');
+                return src === script;
+            });
             if (flag) {
                 const elScript = editor.dom.create('script', {
                     src: script,
-                })
-                elHead.append(elScript)
+                });
+                elHead.append(elScript);
             }
-        })
+        });
     }
 }
 
 /**
  * 获取配置
  */
-function getOption({editor, key}) {
-    return editor.getParam(key) ?? config[key]
+function getOption({ editor, key }) {
+    return editor.getParam(key) ?? config[key];
 }
 
 /**
  * 是否有定界符
  */
-function hasDelimiter({content, delimiter}) {
-    if (!content) return false
-    const [start = '', end = ''] = delimiter
-    return content.startsWith(start) && content.endsWith(end)
+function hasDelimiter({ content, delimiter }) {
+    if (!content) return false;
+    const [start = '', end = ''] = delimiter;
+    return content.startsWith(start) && content.endsWith(end);
 }
 
 /**
  * 添加定界符
  */
-function addDelimiter({content, delimiter}) {
-    const [start = '', end = ''] = delimiter
-    if (!content) return ''
-    if (hasDelimiter({content, delimiter})) {
-        return content
+function addDelimiter({ content, delimiter }) {
+    const [start = '', end = ''] = delimiter;
+    if (!content) return '';
+    if (hasDelimiter({ content, delimiter })) {
+        return content;
     } else {
-        return `${start}${content}${end}`
+        return `${start}${content}${end}`;
     }
 }
 
 /**
  * 移除定界符
  */
-function removeDelimiter({content, delimiter}) {
-    const [start = '', end = ''] = delimiter
-    if (!content) return ''
-    if (hasDelimiter({content, delimiter})) {
-        return content.substring(start.length, content.length - end.length)
+function removeDelimiter({ content, delimiter }) {
+    const [start = '', end = ''] = delimiter;
+    if (!content) return '';
+    if (hasDelimiter({ content, delimiter })) {
+        return content.substring(start.length, content.length - end.length);
     } else {
-        return content
+        return content;
     }
 }
 
@@ -4571,17 +4571,17 @@ var omitBy_default = /*#__PURE__*/__webpack_require__.n(omitBy);
 
 
 
-function useOptions({editor}) {
+function useOptions({ editor }) {
     const options = {
         js: editor.getParam('formula_js'),
         delimiter: editor.getParam('formula_delimiter'),
-    }
+    };
 
     return {
         js: [],
         delimiter: ['$$', '$$'],
         ...omitBy_default()(options, (isEmpty_default())),
-    }
+    };
 }
 
 ;// CONCATENATED MODULE: ./src/plugins/formula/render.js
@@ -4590,8 +4590,8 @@ function useOptions({editor}) {
 
 
 
-function renderBox({editor, data}) {
-    const {delimiter} = useOptions({editor})
+function renderBox({ editor, data }) {
+    const { delimiter } = useOptions({ editor });
     const el = editor.dom.create(
         'span',
         {
@@ -4600,17 +4600,17 @@ function renderBox({editor, data}) {
             'data-content': JSON.stringify(data),
             class: 'xe-formula',
         },
-        addDelimiter({content: data?.content, delimiter}),
-    )
-    return el
+        addDelimiter({ content: data?.content, delimiter })
+    );
+    return el;
 }
 
 /**
  * 渲染 HTML
  * @returns
  */
-function renderHTML({editor, data}) {
-    return editor.dom.getOuterHTML(renderBox({editor, data}))
+function renderHTML({ editor, data }) {
+    return editor.dom.getOuterHTML(renderBox({ editor, data }));
 }
 
 ;// CONCATENATED MODULE: ./src/plugins/formula/dialog.js
@@ -4620,77 +4620,77 @@ function renderHTML({editor, data}) {
 
 
 class Dialog {
-    constructor({editor}) {
-        this.editor = editor
-        this.opts = useOptions({editor})
+    constructor({ editor }) {
+        this.editor = editor;
+        this.opts = useOptions({ editor });
     }
 
-    open({target} = {}) {
-        const {editor, opts} = this
-        const baseURL = editor?.baseURI?.source ?? './'
-        let data = null
+    open({ target } = {}) {
+        const { editor, opts } = this;
+        const baseURL = editor?.baseURI?.source ?? './';
+        let data = null;
 
         if (target) {
-            const dataContent = editor.dom.getAttrib(target, 'data-content')
+            const dataContent = editor.dom.getAttrib(target, 'data-content');
             if (dataContent) {
-                data = JSON.parse(dataContent)
+                data = JSON.parse(dataContent);
             }
         }
 
         editor.windowManager
-              .openUrl({
-                  title: config.text,
-                  url:
-                       false
-                          ? 0
-                          : `${baseURL}/pages/formula.html`,
-                  width: 1000,
-                  height: 648,
-                  buttons: [
-                      {type: 'cancel', name: 'cancel', text: '取消'},
-                      {
-                          type: 'custom',
-                          name: 'ok',
-                          text: '确定',
-                          primary: true,
-                      },
-                  ],
-                  onMessage: (dialogApi, details) => {
-                      const {mceAction} = details
-                      switch (mceAction) {
-                          case 'ready':
-                              dialogApi.unblock()
-                              dialogApi.sendMessage(
-                                  {
-                                      mceAction: 'init',
-                                      data: {
-                                          jsList: opts.js,
-                                          data,
-                                      },
-                                  },
-                                  '*',
-                              )
-                              break
-                          case 'change':
-                              data = {
-                                  content: details?.data?.value,
-                              }
-                              break
-                      }
-                  },
-                  onAction: (dialogApi, details) => {
-                      const {name} = details
-                      if ('ok' === name) {
-                          const html = renderHTML({
-                              editor,
-                              data,
-                          })
-                          editor.execCommand('mceInsertContent', false, html)
-                          dialogApi.close()
-                      }
-                  },
-              })
-              .block('加载中')
+            .openUrl({
+                title: config.text,
+                url:
+                     false
+                        ? 0
+                        : `${baseURL}/pages/formula.html`,
+                width: 1000,
+                height: 648,
+                buttons: [
+                    { type: 'cancel', name: 'cancel', text: '取消' },
+                    {
+                        type: 'custom',
+                        name: 'ok',
+                        text: '确定',
+                        primary: true,
+                    },
+                ],
+                onMessage: (dialogApi, details) => {
+                    const { mceAction } = details;
+                    switch (mceAction) {
+                        case 'ready':
+                            dialogApi.unblock();
+                            dialogApi.sendMessage(
+                                {
+                                    mceAction: 'init',
+                                    data: {
+                                        jsList: opts.js,
+                                        data,
+                                    },
+                                },
+                                '*'
+                            );
+                            break;
+                        case 'change':
+                            data = {
+                                content: details?.data?.value,
+                            };
+                            break;
+                    }
+                },
+                onAction: (dialogApi, details) => {
+                    const { name } = details;
+                    if ('ok' === name) {
+                        const html = renderHTML({
+                            editor,
+                            data,
+                        });
+                        editor.execCommand('mceInsertContent', false, html);
+                        dialogApi.close();
+                    }
+                },
+            })
+            .block('加载中');
     }
 }
 
@@ -4698,15 +4698,15 @@ class Dialog {
 
 
 
-function registerButton({editor}) {
-    let dialog = null
+function registerButton({ editor }) {
+    let dialog = null;
 
     function onSetup(api) {
-        dialog = new Dialog({editor})
+        dialog = new Dialog({ editor });
     }
 
     function onAction() {
-        dialog.open()
+        dialog.open();
     }
 
     editor.ui.registry.addButton(config.name, {
@@ -4715,14 +4715,14 @@ function registerButton({editor}) {
         tooltip: config.tooltip,
         onAction,
         onSetup,
-    })
+    });
 
     editor.ui.registry.addMenuItem(config.name, {
         text: config.text,
         icon: config.icon,
         onAction,
         onSetup,
-    })
+    });
 }
 
 ;// CONCATENATED MODULE: ./src/plugins/formula/event.js
@@ -4733,51 +4733,51 @@ function registerButton({editor}) {
 
 
 
-function registerEvent({editor}) {
+function registerEvent({ editor }) {
     // 初始化
     editor.on('init', (e) => {
-        loadJs({editor})
-    })
+        loadJs({ editor });
+    });
 
     // 设置内容
     editor.on('SetContent', (e) => {
-        const doc = editor.getDoc()
+        const doc = editor.getDoc();
         if (doc.defaultView.MathJax) {
-            doc.defaultView.MathJax.startup.getComponents()
-            doc.defaultView.MathJax.typeset()
+            doc.defaultView.MathJax.startup.getComponents();
+            doc.defaultView.MathJax.typeset();
         }
-    })
+    });
 
     // 获取内容
     editor.on('GetContent', (e) => {
-        const {delimiter} = useOptions({editor})
-        const el = editor.dom.create('div', null, e.content)
-        const targetList = el.querySelectorAll(`[data-name="${config.name}"]`)
+        const { delimiter } = useOptions({ editor });
+        const el = editor.dom.create('div', null, e.content);
+        const targetList = el.querySelectorAll(`[data-name="${config.name}"]`);
         targetList.forEach((target) => {
             const dataContent = JSON.parse(
-                editor.dom.getAttrib(target, 'data-content') || '{}',
-            )
+                editor.dom.getAttrib(target, 'data-content') || '{}'
+            );
             editor.dom.setHTML(
                 target,
                 addDelimiter({
                     content: dataContent?.content,
                     delimiter,
-                }),
-            )
-        })
-        e.content = el.innerHTML
-    })
+                })
+            );
+        });
+        e.content = el.innerHTML;
+    });
 
     // 双击
     editor.on('dblclick', (e) => {
         const target = editor.dom.getParent(
             e.target,
-            `[data-name="${config.name}"]`,
-        )
+            `[data-name="${config.name}"]`
+        );
         if (target) {
-            new Dialog({editor}).open({target})
+            new Dialog({ editor }).open({ target });
         }
-    })
+    });
 }
 
 ;// CONCATENATED MODULE: ./src/plugins/formula/index.js
@@ -4787,15 +4787,15 @@ function registerEvent({editor}) {
 
 
 tinymce.PluginManager.add(config.name, function (editor) {
-    registerButton({editor})
-    registerEvent({editor})
+    registerButton({ editor });
+    registerEvent({ editor });
 
     return {
         getMetaData: () => ({
             name: config.name,
         }),
-    }
-})
+    };
+});
 
 })();
 

@@ -38,44 +38,13 @@ __webpack_require__.r(__webpack_exports__);
     tooltip: '序号填空',
 });
 
-;// CONCATENATED MODULE: ./src/plugins/blanknumber/util.js
-
-
-function getIndex({editor}) {
-    const el = editor.dom.create('div', null, editor.getContent)
-    const targetList = el.querySelectorAll(`[data-name="${config.name}"]`)
-    return targetList.length
-}
-
-function formatContent({editor}) {
-    const bm = editor.selection.getBookmark(2, true)
-    const el = editor.dom.create('div', null, editor.getContent())
-    const tragetList = el.querySelectorAll(`[data-name="${blanknumber_config.name}"]`)
-    tragetList.forEach((target, index) => {
-        const no = index + 1
-        editor.dom.setHTML(target, no)
-        editor.dom.setAttribs(target, {
-            'data-content': JSON.stringify({content: no}),
-        })
-    })
-    editor.setContent(el.innerHTML)
-    editor.selection.moveToBookmark(bm)
-
-    // editor.selection.setCursorLocation(
-    //     editor.selection.getNode().parentNode,
-    //     editor.selection.getRng()?.endOffset
-    // );
-}
-
 ;// CONCATENATED MODULE: ./src/plugins/blanknumber/render.js
-
-
 
 
 /**
  * 渲染容器
  */
-function renderBox({editor}) {
+function renderBox({ editor, data }) {
     const elLine = editor.dom.create(
         'span',
         {
@@ -83,19 +52,55 @@ function renderBox({editor}) {
             class: `xe-${blanknumber_config.name}`,
             'data-name': blanknumber_config?.name,
         },
-        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-    )
-    return elLine
+        data?.content ?? '&nbsp;'
+    );
+    if (data) {
+        editor.dom.setAttrib(elLine, 'data-content', JSON.stringify(data));
+    }
+    return elLine;
 }
 
 /**
  * 渲染 HTML
  * @returns
  */
-function renderHTML({editor}) {
-    const elLine = renderBox({editor})
+function renderHTML({ editor, data }) {
+    const elLine = renderBox({ editor, data });
 
-    return `&nbsp;${editor.dom.getOuterHTML(elLine)}&nbsp;`
+    return editor.dom.getOuterHTML(elLine);
+}
+
+;// CONCATENATED MODULE: ./src/plugins/blanknumber/util.js
+
+
+function getIndex({ editor }) {
+    const el = editor.dom.create('div', null, editor.getContent);
+    const targetList = el.querySelectorAll(`[data-name="${config.name}"]`);
+    return targetList.length;
+}
+
+function formatContent({ editor }) {
+    const bm = editor.selection.getBookmark(2, true);
+    const el = editor.dom.create('div', null, editor.getContent());
+    const tragetList = el.querySelectorAll(`[data-name="${blanknumber_config.name}"]`);
+    const firstNumber = Number(
+        JSON.parse(editor.dom.getAttrib(tragetList[0], 'data-content') || '{}')
+            ?.content ?? 1
+    );
+    tragetList.forEach((target, index) => {
+        const number = index + firstNumber;
+        editor.dom.setHTML(target, number);
+        editor.dom.setAttribs(target, {
+            'data-content': JSON.stringify({ content: String(number) }),
+        });
+    });
+    editor.setContent(el.innerHTML);
+    editor.selection.moveToBookmark(bm);
+
+    editor.selection.setCursorLocation(
+        editor.selection.getNode().parentNode,
+        editor.selection.getRng()?.endOffset
+    );
 }
 
 ;// CONCATENATED MODULE: ./src/plugins/blanknumber/button.js
@@ -104,13 +109,12 @@ function renderHTML({editor}) {
 
 
 
-function registerButton({editor}) {
-    function onSetup(api) {
-    }
+function registerButton({ editor }) {
+    function onSetup(api) {}
 
     function onAction() {
-        editor.execCommand('mceInsertContent', false, renderHTML({editor}))
-        formatContent({editor})
+        editor.execCommand('mceInsertContent', false, renderHTML({ editor }));
+        formatContent({ editor });
     }
 
     editor.ui.registry.addToggleButton(blanknumber_config.name, {
@@ -119,14 +123,85 @@ function registerButton({editor}) {
         tooltip: blanknumber_config.tooltip,
         onAction,
         onSetup,
-    })
+    });
 
     editor.ui.registry.addToggleMenuItem(blanknumber_config.name, {
         text: blanknumber_config.text,
         icon: blanknumber_config.icon,
         onAction,
         onSetup,
-    })
+    });
+}
+
+;// CONCATENATED MODULE: ./src/plugins/blanknumber/dialog.js
+
+
+
+class Dialog {
+    constructor({ editor }) {
+        this.editor = editor;
+    }
+
+    open({ target }) {
+        const { editor } = this;
+        let data = null;
+        if (target) {
+            const dataContent = editor.dom.getAttrib(target, 'data-content');
+            if (dataContent) {
+                data = JSON.parse(dataContent);
+            }
+        }
+        editor.windowManager.open({
+            title: '序号',
+            body: {
+                type: 'panel',
+                items: [{ type: 'input', name: 'content' }],
+            },
+            initialData: {
+                content: data?.content ?? '',
+            },
+            buttons: [
+                { type: 'cancel', name: 'cancel', text: '取消' },
+                { type: 'submit', name: 'ok', text: '确定', primary: true },
+            ],
+            onSubmit: (dialogApi) => {
+                editor.execCommand(
+                    'mceInsertContent',
+                    false,
+                    renderHTML({ editor, data: dialogApi.getData() })
+                );
+                formatContent({ editor });
+                dialogApi.close();
+            },
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./src/plugins/blanknumber/event.js
+
+
+
+
+function registerEvent({ editor }) {
+    // 双击
+    editor.on('dblclick', (e) => {
+        const target = editor.dom.getParent(
+            e.target,
+            `[data-name="${blanknumber_config.name}"]`
+        );
+        const elContent = editor.dom.create('div', null, editor.getContent());
+        const elFirst = elContent.querySelectorAll(
+            `[data-name="${blanknumber_config.name}"]`
+        )[0];
+
+        // 判断是否第一个
+        if (
+            editor.dom.getAttrib(target, 'data-content') ===
+            editor.dom.getAttrib(elFirst, 'data-content')
+        ) {
+            new Dialog({ editor }).open({ target });
+        }
+    });
 }
 
 ;// CONCATENATED MODULE: ./src/plugins/blanknumber/index.js
@@ -134,15 +209,17 @@ function registerButton({editor}) {
 
 
 
+
 tinymce.PluginManager.add(blanknumber_config.name, function (editor) {
-    registerButton({editor})
+    registerButton({ editor });
+    registerEvent({ editor });
 
     return {
         getMetaData: () => ({
             name: blanknumber_config.name,
         }),
-    }
-})
+    };
+});
 
 /******/ 	return __webpack_exports__;
 /******/ })()
