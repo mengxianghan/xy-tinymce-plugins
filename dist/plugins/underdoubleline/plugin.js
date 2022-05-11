@@ -45,7 +45,7 @@ function registerButton({ editor }) {
     function onSetup(api) {
         editor.formatter.register(config.name, {
             inline: 'span',
-            styles: { textDecoration: 'underline 1px double' },
+            classes: `xe-${config.name}`,
         });
 
         editor.formatter.formatChanged(config.name, function (state) {
