@@ -1,0 +1,112 @@
+//Align
+@align: left, center, right;
+each(@align, {
+    .align-@{value} {
+        text-align: @value !important;
+    }
+})
+
+//Color
+@color: {
+    secondary: @text-color-secondary;
+    heading: @heading-color;
+    disabled: @disabled-color;
+    placeholder: @disabled-color;
+    primary: @primary-color;
+    error: @error-color;
+    success: @success-color;
+    warning: @warning-color;
+}
+
+each(@color, {
+    .color-@{key} {
+        color: @value !important;
+    }
+})
+
+//FontSize
+@font-size: 12, 14, 16, 24;
+each(@font-size, {
+    .fs-@{value} {
+        font-size: @value * 1px !important;
+    }
+})
+
+//Spacing
+@spacing: {
+    mt: margin-top;
+    mb: margin-bottom;
+    ml: margin-left;
+    mr: margin-right;
+    mx: margin-left, margin-right;
+    my: margin-top, margin-bottom;
+    ma: margin;
+    pt: padding-top;
+    pb: padding-bottom;
+    pl: padding-left;
+    pr: padding-right;
+    px: padding-left, padding-right;
+    py: padding-top, padding-bottom;
+    pa: padding;
+}
+
+@values: 4, 5, 8;
+@multiple: 1, 2, 3, 4, 5;
+each(@spacing, .(@property, @class) {
+    .@{class}-0 {
+        each(@property, .(@prop) {
+                @{prop}: 0 !important;
+        })
+    }
+
+    each(@values, .(@value) {
+        each(@multiple, .(@multi) {
+            .@{class}-@{value}-@{multi} {
+                each(@property, .(@prop) {
+                        @{prop}: @value * @multi * 1px !important;
+                })
+            }
+        })
+    })
+})
+
+@cursor-value: pointer, default;
+each(@cursor-value, .(@value) {
+    .cursor-@{value} {
+        cursor: @value;
+    }
+})
+
+// Flex
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.direction-column {
+    flex-direction: column;
+}
+
+.hp-100 {
+    height: 100%;
+}
+
+.wp-100 {
+    width: 100%;
+}
+
+.scrollbar {
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+    }
+}

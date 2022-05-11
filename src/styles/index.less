@@ -1,0 +1,124 @@
+.xe {
+    // 弹窗中的预览区域
+    &-dialog-preview {
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:empty {
+            position: relative;
+
+            &::after {
+                content: '预览区域';
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate3d(-50%, -50%, 0);
+                font-size: 20px;
+                color: rgba(0, 0, 0, 0.25);
+            }
+        }
+    }
+
+    // 波浪线
+    &-underwavy {
+        text-decoration: underline wavy 1px;
+    }
+
+    // 下划线
+    &-underline {
+        text-decoration: underline 1px;
+    }
+
+    // 双下划线
+    &-underdoubleline {
+        text-decoration: underline double 1px;
+    }
+
+    // 加点字
+    &-underpoint {
+        text-emphasis-style: dot;
+        text-emphasis-position: under left;
+    }
+
+    &-pinyin {
+        text-align: center !important;
+
+        &-group {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 4px 0;
+
+            > .xe-tianzige,
+            > .xe-pinyin {
+                &:not(:last-child) {
+                    margin-right: -1px;
+                }
+            }
+        }
+    }
+
+    // 田字格
+    &-tianzige {
+        width: 3em !important;
+        height: 3em !important;
+        position: relative !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: currentColor solid 1px !important;
+        vertical-align: text-bottom;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 100%;
+            border-top: currentColor dashed 1px;
+            transform: scale3d(1, 0.75, 1);
+            left: 0;
+            opacity: 0.65;
+        }
+
+        &::after {
+            width: 0;
+            height: 100%;
+            border-top: 0;
+            border-left: currentColor dashed 1px;
+            transform: scale3d(0.75, 1, 1);
+            top: 0;
+            left: auto;
+        }
+
+        &__text {
+            font-size: 1em;
+        }
+    }
+
+    // 公式
+    &-formula {
+        display: inline-block;
+    }
+
+    // 填空
+    &-blank,
+    &-blanknumber {
+        border-bottom: currentColor solid 1px;
+    }
+
+    // 序号填空
+    &-blanknumber {
+        width: 4em;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 2px;
+    }
+}
+
+// 公式
+mjx-container[jax='SVG'][display='true'] {
+    margin: 0 !important;
+}

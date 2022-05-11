@@ -13,5 +13,5 @@
 |blanknumber|带序号填空|
 |blankbracket|括号填空|
 
-## 使用
+## 使用方法
 将 dist 目录下所有文件拷贝到 tinymce 到根目录下即可
