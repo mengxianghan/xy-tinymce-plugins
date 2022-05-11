@@ -1,7 +1,7 @@
 {
-  "name": "xy-editor",
+  "name": "xy-tinymce-plugins",
   "version": "1.0.0",
-  "description": "基于 tinymce 的插件",
+  "description": "tinymce 编辑器插件",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development gulp watch",
