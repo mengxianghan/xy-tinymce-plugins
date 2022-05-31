@@ -21,7 +21,7 @@ gulp.task('monitor', function (done) {
     connect.server(
         {
             root: './demo',
-            port: 8900,
+            port: 9000,
             livereload: true,
         },
         function () {

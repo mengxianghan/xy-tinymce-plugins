@@ -1,6 +1,6 @@
 const env = {
     development: {
-        APP_PUBLIC_PATH: 'http://localhost:8900',
+        APP_PUBLIC_PATH: 'http://localhost:9000',
     },
     production: {
         APP_PUBLIC_PATH: 'https://mengxianghan.github.io/xy-tinymce-plugins/demo',
