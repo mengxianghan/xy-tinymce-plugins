@@ -1,72 +1,56 @@
 <template>
     <div class="pa-8-1">
-        <a-tabs type="card" class="tab">
+        <a-tabs type="card"
+                class="tab">
             <template #rightExtra>
-                <a href="https://katex.org/docs/supported.html" target="_blank"
-                    >LaTex 语法参考</a
-                >
+                <a href="https://www.onemathematicalcat.org/MathJaxDocumentation/TeXSyntax.htm"
+                   target="_blank">语法参考</a>
             </template>
-            <a-tab-pane
-                v-for="(item, index) in basicList"
-                :key="item.value"
-                :tab="item.label"
-            >
-                <a-row :gutter="8" type="flex">
-                    <a-col
-                        v-for="(menu, menuIndex) in item.menu.list"
-                        :key="menu.key"
-                        flex="1 0 0"
-                    >
-                        <a-popover
-                            v-model:visible="menu._visible"
-                            placement="bottomLeft"
-                            arrowPointAtCenter
-                            overlayClassName="command-popover"
-                            :trigger="['click']"
-                        >
-                            <a-button class="align-center tab-btn" block>
-                                <img
-                                    :src="
-                                        require(`@/${item.menu.path}${menu.icon}`)
-                                    "
-                                />
+            <a-tab-pane v-for="(item, index) in basicList"
+                        :key="item.value"
+                        :tab="item.label">
+                <a-row :gutter="8"
+                       type="flex">
+                    <a-col v-for="(menu, menuIndex) in item.menu.list"
+                           :key="menu.key"
+                           flex="1 0 0">
+                        <a-popover v-model:visible="menu._visible"
+                                   placement="bottomLeft"
+                                   arrowPointAtCenter
+                                   overlayClassName="command-popover"
+                                   :trigger="['click']">
+                            <a-button class="align-center tab-btn"
+                                      block>
+                                <img :src="
+                                    require(`@/${item.menu.path}${menu.icon}`)
+                                " />
                                 <div>{{ menu.label }}</div>
                                 <down-outlined class="fs-10" />
                             </a-button>
                             <template #content>
                                 <div class="command">
-                                    <template
-                                        v-for="(command, commandIndex) in item
-                                            .command.data[menu.value]"
-                                    >
-                                        <template
-                                            v-if="command.type === 'heading'"
-                                        >
-                                            <div
-                                                class="command__title"
-                                                :key="commandIndex"
-                                            >
+                                    <template v-for="(command, commandIndex) in item
+                                    .command.data[menu.value]">
+                                        <template v-if="command.type === 'heading'">
+                                            <div class="command__title"
+                                                 :key="commandIndex">
                                                 {{ command.label }}
                                             </div>
                                         </template>
                                         <template v-else>
-                                            <a
-                                                class="command__item"
-                                                :key="commandIndex"
-                                                :style="command.style"
-                                                @click="
-                                                    handleInsert(
-                                                        command,
-                                                        index,
-                                                        menuIndex
-                                                    )
-                                                "
-                                            >
-                                                <img
-                                                    :src="
-                                                        require(`@/${item.command.path}${menu.value}/${command.icon}`)
-                                                    "
-                                                />
+                                            <a class="command__item"
+                                               :key="commandIndex"
+                                               :style="command.style"
+                                               @click="
+                                                   handleInsert(
+                                                       command,
+                                                       index,
+                                                       menuIndex
+                                                   )
+                                               ">
+                                                <img :src="
+                                                    require(`@/${item.command.path}${menu.value}/${command.icon}`)
+                                                " />
                                             </a>
                                         </template>
                                     </template>
@@ -79,32 +63,24 @@
         </a-tabs>
         <div class="mt-8-1">
             <a-space>
-                <a-dropdown
-                    v-for="(attr, index) in attrList"
-                    :key="index"
-                    :trigger="['click']"
-                >
+                <a-dropdown v-for="(attr, index) in attrList"
+                            :key="index"
+                            :trigger="['click']">
                     <a-button class="flex items-center">
-                        <component
-                            :is="attr.icon"
-                            theme="outline"
-                            size="15"
-                            class="mr-4-1"
-                        />
+                        <component :is="attr.icon"
+                                   theme="outline"
+                                   size="15"
+                                   class="mr-4-1" />
                         {{ attr.label }}
                     </a-button>
                     <template #overlay>
-                        <a-menu>
-                            <a-menu-item
-                                v-for="item in attr.children"
-                                :key="item.tag"
-                                @click="handleInsert(item)"
-                            >
-                                <img
-                                    :src="require(`@/${item.icon}`)"
-                                    :alt="item.tag"
-                                    class="attr-img"
-                                />
+                        <a-menu :style="{ maxHeight: '240px', overflowY: 'auto' }">
+                            <a-menu-item v-for="item in attr.children"
+                                         :key="item.tag"
+                                         @click="handleInsert(item)">
+                                <img :src="require(`@/${item.icon}`)"
+                                     :alt="item.tag"
+                                     class="attr-img" />
                             </a-menu-item>
                         </a-menu>
                     </template>
@@ -112,18 +88,18 @@
             </a-space>
         </div>
         <div class="mt-8-1">
-            <a-textarea
-                v-model:value="content"
-                placeholder="请输入 LaTex 表达式"
-                :rows="6"
-                ref="inputRef"
-                class="input-control"
-                @blur="onBlur"
-            ></a-textarea>
+            <a-textarea v-model:value="content"
+                        placeholder="请输入 LaTex 表达式"
+                        :rows="6"
+                        ref="inputRef"
+                        class="input-control"
+                        @blur="onBlur"></a-textarea>
         </div>
         <div class="preview pa-8-2 mt-8-1">
-            <div v-show="content" ref="previewRef"></div>
-            <div v-if="!content" class="preview__empty">
+            <div v-show="content"
+                 ref="previewRef"></div>
+            <div v-if="!content"
+                 class="preview__empty">
                 <img :src="require('@/assets/formula/empty.png')" />
             </div>
         </div>
