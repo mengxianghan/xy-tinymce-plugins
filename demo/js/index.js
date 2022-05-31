@@ -16,7 +16,7 @@ return /******/ (() => { // webpackBootstrap
 
 const env = {
     development: {
-        APP_PUBLIC_PATH: 'http://localhost:8900',
+        APP_PUBLIC_PATH: 'http://localhost:9000',
     },
     production: {
         APP_PUBLIC_PATH: 'https://mengxianghan.github.io/xy-tinymce-plugins/demo',
@@ -44,7 +44,7 @@ module.exports = env["production"];
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\nhtml,\nbody {\n  height: 100%;\n}\nbody {\n  font: normal normal normal 14px/1.7 'PingFang SC';\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\nhtml,\nbody {\n  height: 100%;\n}\nbody {\n  font: normal normal normal 14px/1.7 'PingFang SC';\n}\n.container {\n  width: 1000px;\n  margin: 0 auto;\n  padding: 16px 0;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
